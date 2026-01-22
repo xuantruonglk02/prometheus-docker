@@ -20,6 +20,17 @@ services:
         networks:
             - monitoring
 
+    loki:
+        image: grafana/loki:3.6.4
+        restart: unless-stopped
+        ports:
+            - "3100:3100"
+        volumes:
+            - ./loki/loki.yml:/etc/loki/loki.yaml
+        command: -config.file=/etc/loki/loki.yaml
+        networks:
+            - monitoring
+
     node-exporter:
         image: prom/node-exporter:v1.10.2
         restart: unless-stopped
@@ -66,6 +77,7 @@ services:
             - ./grafana/provisioning:/etc/grafana/provisioning
         depends_on:
             - prometheus
+            - loki
         networks:
             - monitoring
 

@@ -45,13 +45,13 @@ sudo htpasswd -c /etc/nginx/.htpasswd node_exporter
 sudo tee /etc/nginx/sites-available/node_exporter > /dev/null <<'EOF'
 server {
     listen 80;
-    server_name domain;
+    server_name CHANGE_ME;
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl http2;
-    server_name domain;
+    server_name CHANGE_ME;
 
     ssl_certificate /etc/ssl/cloudflare/cert.pem;
     ssl_certificate_key /etc/ssl/cloudflare/key.pem;
