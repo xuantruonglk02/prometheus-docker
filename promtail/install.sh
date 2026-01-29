@@ -56,6 +56,22 @@ scrape_configs:
           job: nginx
           host: $(hostname)
           __path__: /var/log/nginx/*log
+    pipeline_stages:
+      - regex:
+          expression: '^(?P<remote_addr>[\w\.:]+) - (?P<remote_user>[^ ]+) \[(?P<time_local>[^\]]+)\] "(?P<method>\w+) (?P<request_uri>[^ ]+) (?P<protocol>[^"]+)" (?P<status>\d+) (?P<body_bytes_sent>\d+) "(?P<http_referer>[^"]*)" "(?P<http_user_agent>[^"]*)"'
+      - labels:
+          remote_addr:
+          remote_user:
+          method:
+          request_uri:
+          protocol:
+          status:
+          body_bytes_sent:
+          http_referer:
+          http_user_agent:
+      - timestamp:
+          source: time_local
+          format: 02/Jan/2006:15:04:05 -0700
 
   - job_name: application
     static_configs:
@@ -65,6 +81,38 @@ scrape_configs:
           job: application
           host: $(hostname)
           __path__: /home/ubuntu/photobooth-manager/logs/*.log
+    pipeline_stages:
+      - match:
+          selector: '{job="application"}'
+          stages:
+            - regex:
+                expression: '^(?P<timestamp>\S+) \[(?P<level>\w+)\] (?P<app_name>[\w\-]+) (?P<source>\w+) -- (?P<remote_addr>[\w\.:]+) \[(?P<email>[^\s\]]+)(\s+(?P<role>\w+))?(\s+(?P<tenant_id>[\w]+))?\] (?P<method>\w+) (?P<request_uri>\S+) (?P<status>\d+) (?P<response_time>[\d\.]+ms)$'
+            - labels:
+                level:
+                app_name:
+                source:
+                remote_addr:
+                email:
+                role:
+                tenant_id:
+                method:
+                status:
+                response_time:
+            - timestamp:
+                source: timestamp
+                format: RFC3339
+      - match:
+          selector: '{job="application"}'
+          stages:
+            - regex:
+                expression: '^(?P<timestamp>\S+) \[(?P<level>\w+)\] (?P<app_name>[\w\-]+) (?P<service>[\w]+) -- (?P<message>.+)$'
+            - labels:
+                level:
+                app_name:
+                service:
+            - timestamp:
+                source: timestamp
+                format: RFC3339
 EOF
 
 sudo chown -R promtail:promtail /etc/promtail
