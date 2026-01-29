@@ -64,7 +64,7 @@ scrape_configs:
         labels:
           job: application
           host: $(hostname)
-          __path__: /root/photobooth-manager/logs/*.log
+          __path__: /home/ubuntu/photobooth-manager/logs/*.log
 EOF
 
 sudo chown -R promtail:promtail /etc/promtail
