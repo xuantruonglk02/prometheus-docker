@@ -60,15 +60,8 @@ scrape_configs:
       - regex:
           expression: '^(?P<remote_addr>[\w\.:]+) - (?P<remote_user>[^ ]+) \[(?P<time_local>[^\]]+)\] "(?P<method>\w+) (?P<request_uri>[^ ]+) (?P<protocol>[^"]+)" (?P<status>\d+) (?P<body_bytes_sent>\d+) "(?P<http_referer>[^"]*)" "(?P<http_user_agent>[^"]*)"'
       - labels:
-          remote_addr:
-          remote_user:
           method:
-          request_uri:
-          protocol:
           status:
-          body_bytes_sent:
-          http_referer:
-          http_user_agent:
       - timestamp:
           source: time_local
           format: 02/Jan/2006:15:04:05 -0700
@@ -90,14 +83,9 @@ scrape_configs:
             - labels:
                 level:
                 app_name:
-                source:
-                remote_addr:
-                email:
                 role:
                 tenant_id:
-                method:
                 status:
-                response_time:
             - timestamp:
                 source: timestamp
                 format: RFC3339
