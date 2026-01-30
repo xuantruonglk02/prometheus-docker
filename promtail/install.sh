@@ -62,6 +62,11 @@ scrape_configs:
       - labels:
           method:
           status:
+      - structured_metadata:
+          remote_addr:
+          request_uri:
+          http_user_agent:
+          body_bytes_sent:
       - timestamp:
           source: time_local
           format: 02/Jan/2006:15:04:05 -0700
@@ -83,9 +88,12 @@ scrape_configs:
             - labels:
                 level:
                 app_name:
-                role:
-                tenant_id:
                 status:
+            - structured_metadata:
+                remote_addr:
+                email:
+                tenant_id:
+                response_time:
             - timestamp:
                 source: timestamp
                 format: RFC3339
