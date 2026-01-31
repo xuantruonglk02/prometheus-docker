@@ -56,20 +56,6 @@ scrape_configs:
           job: nginx
           host: $(hostname)
           __path__: /var/log/nginx/*log
-    pipeline_stages:
-      - regex:
-          expression: '^(?P<remote_addr>[\w\.:]+) - (?P<remote_user>[^ ]+) \[(?P<time_local>[^\]]+)\] "(?P<method>\w+) (?P<request_uri>[^ ]+) (?P<protocol>[^"]+)" (?P<status>\d+) (?P<body_bytes_sent>\d+) "(?P<http_referer>[^"]*)" "(?P<http_user_agent>[^"]*)"'
-      - labels:
-          method:
-          status:
-      - structured_metadata:
-          remote_addr:
-          request_uri:
-          http_user_agent:
-          body_bytes_sent:
-      - timestamp:
-          source: time_local
-          format: 02/Jan/2006:15:04:05 -0700
 
   - job_name: application
     static_configs:
